@@ -151,10 +151,14 @@ int bitNor(int x, int y)
  *   Max ops: 8
  *   Rating: 1
  */
-int fitsShort(int x) 
+int fitsShort(int x) //NEED TO FIX, too many operations
 {
-   
-    return x;
+    int mask = 0x7F;
+    mask = mask << 8;
+    mask = mask + 0xFF;
+    mask = ~mask;
+    
+    return ( !(x&mask) | !(~x&mask) );
 }
 /* 
  * thirdBits - return word with every third bit (starting from the LSB) set to 1
@@ -165,9 +169,11 @@ int fitsShort(int x)
 int thirdBits(void) //DONE!!!
 {
     //Output should be:
-   //0x49249249	0100_1001_0010_0100_1001_0010_0100_1001	1227133513
+    //0x49249249	0100_1001_0010_0100_1001_0010_0100_1001	1227133513
     //Need to create a mask? every third bit is 1, all else 0
-
+    //Created a long int to match size of output
+    //Shifted and added max allowable hex values to reach correct output 
+    
     long x = 0x49;   //0000_0000_0000_0000_0000_0000_0100_1001
     x = (x << 8);    //0000_0000_0000_0000_0100_1001_0000_0000
     x = x + 0x24;    //0000_0000_0000_0000_0100_1001_0010_0100
@@ -185,21 +191,24 @@ int thirdBits(void) //DONE!!!
  *   Max ops: 12
  *   Rating: 2
  */
-int anyEvenBit(int x) 
+int anyEvenBit(int x) //DONE!!!
 {
+    //Create a mask: 0x55555555 to check if any even bit is 1
+    //Use & operator with var. x to see if the value is returned as 0 or 1
     
     long mask = 0x55;
-    mask = mask << 8;     //1
-    mask = mask + 0x55;   //2
-    mask = mask << 8;     //3
-    mask = mask + 0x55;   //4
-    mask = mask << 8;     //5
-    mask = mask + 0x55;   //6
+    mask = (mask << 8);     //1
+    mask = (mask + 0x55);   //2
+    mask = (mask << 8);     //3
+    mask = (mask + 0x55);   //4
+    mask = (mask << 8);     //5
+    mask = (mask + 0x55);   //6
     
-    int output = (int)(x&mask);
-//     long mask = 0x55;
-//     mask = (mask << 28);
-    return output;
+    // (x&mask) returns 0x55555555 (mask)
+    // in order to return correct value, double logical negation used:
+    // !(x&mask) returns 1, !!(x&mask) returns 0 correctly
+    
+    return !!(x&mask); //+3 operations = 9 operations total
 }
 /* 
  * copyLSB - set all bits of result to least significant bit of x
@@ -216,6 +225,7 @@ int copyLSB(int x) //DONE!!!
     //     int a = x&1;
     //     x = ~a;
     //     return x+1;
+    
     return ( ~(x&1) ) + 1;
 }
 /* 
@@ -233,6 +243,7 @@ int implication(int x, int y) //DONE!!!
     //if x = 1, !x = 0 (and vice versa)
     //the return is using OR to return 0 or 1 depending on
     //the values of x and y input into function
+    
     x = !x;
     return (x|y);
 }

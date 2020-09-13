@@ -267,7 +267,7 @@ int implication(int x, int y) //DONE!!!
  *   Max ops: 16
  *   Rating: 3
  */
-int bitMask(int highbit, int lowbit) 
+int bitMask(int highbit, int lowbit) //DONE!!!
 {
     //create a mask: ~ 0 = -1 = (1111...1111)
     //ex: (high = 5, low = 3):

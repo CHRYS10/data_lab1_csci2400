@@ -153,12 +153,22 @@ int bitNor(int x, int y)
  */
 int fitsShort(int x) //NEED TO FIX, too many operations
 {
-    int mask = 0x7F;
-    mask = mask << 8;
-    mask = mask + 0xFF;
-    mask = ~mask;
+    //x is 0x80000000 = -2147483648 
+    //x is 0x7fffffff = 2147483647
+    //x is 0
+    //case 1: x = 0x7fffffff, a = 0x0, return must be 0
+    //case 2: x = 0x80000000, a = -0x1, return must be 0
+    //case 3: x = 0x0, a = 0x0, return must be 1
     
-    return ( !(x&mask) | !(~x&mask) );
+    int a = (x >> 31); //0 or -1 after shifting
+    // -0x10000 or 0xffff (e.g. 1111...0000 | 0000....1111) 
+    int b = (x >> 15); 
+    
+    //case 1 return: b^a = 0xffff, !(0xffff) = 0 
+    //case 2 return: b^a = 0xffff, !(0xffff) = 0
+    //case 3 return b^a = 0x0, !(0x0) = 1 
+    
+    return !((b)^(a));
 }
 /* 
  * thirdBits - return word with every third bit (starting from the LSB) set to 1
@@ -259,8 +269,14 @@ int implication(int x, int y) //DONE!!!
  */
 int bitMask(int highbit, int lowbit) 
 {
+    //create a mask between bit 3 and bit 5 as 1's
+    int a = highbit|lowbit;
+    a = a << lowbit;
+//     int mask = ~0 << 6;
+//     mask = ~(mask + 0x7);
     
-    return 2;
+    return a;
+    //return !(a&mask);
 }
 /*
  * ezThreeFourths - multiplies by 3/4 rounding toward 0,
@@ -275,7 +291,8 @@ int bitMask(int highbit, int lowbit)
  */
 int ezThreeFourths(int x) 
 {
-  return 2;
+    
+    return 2;
 }
 /*
  * satMul3 - multiplies by 3, saturating to Tmin or Tmax if overflow
@@ -301,7 +318,9 @@ int satMul3(int x)
  */
 int bitParity(int x) 
 {
-  return 2;
+  int mask = 0x2;
+  int a = !!((x&1)>>2);  
+  return a;
 }
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
@@ -374,3 +393,4 @@ unsigned float_twice(unsigned uf)
 {
   return 2;
 }
+

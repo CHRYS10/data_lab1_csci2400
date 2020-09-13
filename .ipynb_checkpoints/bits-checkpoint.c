@@ -151,7 +151,7 @@ int bitNor(int x, int y)
  *   Max ops: 8
  *   Rating: 1
  */
-int fitsShort(int x) //NEED TO FIX, too many operations
+int fitsShort(int x) //DONE!!!
 {
     //x is 0x80000000 = -2147483648 
     //x is 0x7fffffff = 2147483647

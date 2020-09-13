@@ -269,14 +269,22 @@ int implication(int x, int y) //DONE!!!
  */
 int bitMask(int highbit, int lowbit) 
 {
-    //create a mask between bit 3 and bit 5 as 1's
-    int a = highbit|lowbit;
-    a = a << lowbit;
-//     int mask = ~0 << 6;
-//     mask = ~(mask + 0x7);
+    //create a mask: ~ 0 = -1 = (1111...1111)
+    //ex: (high = 5, low = 3):
+    //a = ~0 << 3 = -0x8
+    //b = ~0 << 5 = -0x20
+    //b = b << 1 = -0x40
+    //b = ~b = 0x3f (negate b) (0000...0011_1111)
+    //b&a = 0x3f & -0x8 = 0x38 (0000...0011_1000)
     
-    return a;
-    //return !(a&mask);
+    int mask = ~0;
+    int a = (mask << lowbit);  //shifts all 1's left by lowbit input
+    int b = (mask << highbit); //shifts all 1's left by highbit input
+    b = ~(b << 1);             //shift b by 1 bit, then negate: 
+    //returns mask of 1's
+    //only where a and b both have 1's line up
+    return (b&a);              
+    
 }
 /*
  * ezThreeFourths - multiplies by 3/4 rounding toward 0,

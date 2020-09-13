@@ -283,7 +283,7 @@ int bitMask(int highbit, int lowbit) //DONE!!!
     b = ~(b << 1);             //shift b by 1 bit, then negate: 
     //returns mask of 1's
     //only where a and b both have 1's line up
-    return (b&a);              
+    return (a&b);              
     
 }
 /*
@@ -297,10 +297,19 @@ int bitMask(int highbit, int lowbit) //DONE!!!
  *   Max ops: 12
  *   Rating: 3
  */
-int ezThreeFourths(int x) 
+int ezThreeFourths(int x) //DONE!!!
 {
-    
-    return 2;
+    int a;
+    int b;
+    int c;
+    int d;
+    int m;
+    m = ( (x << 1) + x);  //same as adding (x + x + x) = num to divide
+    a = (1 << 2) + ~0;    //0x4 + -0x1 = 0x3 -> mask
+    b = (m >> 31);        //0x0 or -0x1 (ex: -9, output = -6)-> gen. sign
+    c = (a&b);            //0x3 & 0x0 = 0x0   --> handles bias 
+    d = ( (m + c) >> 2);  //(num + bias) >> 2 = output 
+    return d;
 }
 /*
  * satMul3 - multiplies by 3, saturating to Tmin or Tmax if overflow
@@ -353,7 +362,8 @@ int ilog2(int x)
  */
 int trueThreeFourths(int x)
 {
-  return 2;
+    
+    return 2;
 }
 /*
  * Extra credit

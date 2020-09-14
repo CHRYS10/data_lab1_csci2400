@@ -335,9 +335,7 @@ int satMul3(int x)
  */
 int bitParity(int x) 
 {
-  int mask = 0x2;
-  int a = !!((x&1)>>2);  
-  return a;
+    return 2;
 }
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
@@ -360,10 +358,23 @@ int ilog2(int x)
  *   Max ops: 20
  *   Rating: 4
  */
-int trueThreeFourths(int x)
+int trueThreeFourths(int x) //DONE!!!
 {
+    //ex x = (-9) -> -0x9
+    //a = 0x3
+    //b = 0x3
+    //c = -0x3
+    //d = -0x9
+    //e = 0x3
+    //returns -0x9 + 0x3 = -0x6 
     
-    return 2;
+    int a = x & 0x3;               //remainder of x div by 4
+    int b = (x >> 31) & 0x3;       //generates small num (0x0/0x3) 
+    int c = (x >> 2);              //accounts for sign
+    int d = c + (c << 1);          //generates largest(+/-) val
+    int e =  ( (a << 1) + a + b);  //accounts for bias, creates a large val
+    e = e >> 2;                    //large val >> 2 = small val (bias)
+    return (d + e);                //returns largest (+/-)val + bias
 }
 /*
  * Extra credit

@@ -141,7 +141,7 @@ NOTES:
  */
 int bitNor(int x, int y) 
 {
-  return (~x & ~y);
+  return (~x & ~y); //DeMorgan's Law 
 }
 /* 
  * fitsShort - return 1 if x can be represented as a 
@@ -168,7 +168,7 @@ int fitsShort(int x) //DONE!!!
     //case 2 return: b^a = 0xffff, !(0xffff) = 0
     //case 3 return b^a = 0x0, !(0x0) = 1 
     
-    return !((b)^(a));
+    return !( (b)^(a) );
 }
 /* 
  * thirdBits - return word with every third bit (starting from the LSB) set to 1
@@ -218,7 +218,7 @@ int anyEvenBit(int x) //DONE!!!
     // in order to return correct value, double logical negation used:
     // !(x&mask) returns 1, !!(x&mask) returns 0 correctly
     
-    return !!(x&mask); //+3 operations = 9 operations total
+    return !!(x & mask); //+3 operations = 9 operations total
 }
 /* 
  * copyLSB - set all bits of result to least significant bit of x
@@ -236,7 +236,7 @@ int copyLSB(int x) //DONE!!!
     //     x = ~a;
     //     return x+1;
     
-    return ( ~(x&1) ) + 1;
+    return ( ~(x & 1) ) + 1;
 }
 /* 
  * implication - return x -> y in propositional logic - 0 for false, 1
@@ -255,7 +255,7 @@ int implication(int x, int y) //DONE!!!
     //the values of x and y input into function
     
     x = !x;
-    return (x|y);
+    return (x | y);
 }
 /* 
  * bitMask - Generate a mask consisting of all 1's 
@@ -283,7 +283,7 @@ int bitMask(int highbit, int lowbit) //DONE!!!
     b = ~(b << 1);             //shift b by 1 bit, then negate: 
     //returns mask of 1's
     //only where a and b both have 1's line up
-    return (a&b);              
+    return (a & b);              
     
 }
 /*
@@ -304,11 +304,13 @@ int ezThreeFourths(int x) //DONE!!!
     int c;
     int d;
     int m;
+    
     m = ( (x << 1) + x);  //same as adding (x + x + x) = num to divide
     a = (1 << 2) + ~0;    //0x4 + -0x1 = 0x3 -> mask
     b = (m >> 31);        //0x0 or -0x1 (ex: -9, output = -6)-> gen. sign
-    c = (a&b);            //0x3 & 0x0 = 0x0   --> handles bias 
+    c = (a & b);            //0x3 & 0x0 = 0x0   --> handles bias 
     d = ( (m + c) >> 2);  //(num + bias) >> 2 = output 
+    
     return d;
 }
 /*
@@ -322,9 +324,19 @@ int ezThreeFourths(int x) //DONE!!!
  *  Max ops: 25
  *  Rating: 3
  */
-int satMul3(int x) 
+int satMul3(int x) //RAN OUT OF TIME....
 {
-    return 2;
+    //int Tmax;
+    //int Tmin;
+    x = (x << 1) + x;
+    
+    
+    //Tmax = (~0) ^ (0x1 << 31);
+    //Tmin = 0x1 << 31;
+    
+    return x;         //returns correct value = (x * 3), not correct...
+    
+    //return 2;
 }
 /*
  * bitParity - returns 1 if x contains an odd number of 0's
@@ -333,9 +345,26 @@ int satMul3(int x)
  *   Max ops: 20
  *   Rating: 4
  */
-int bitParity(int x) 
+int bitParity(int x) //DONE!!!
 {
-    return 2;
+    //depending on size of x input, parity shaves down x
+    //by shifting input, then using XOR to compare 
+    //value in parity and the shifted value of parity 
+    //and store value of XOR operation in parity
+    //Shifts by a total of 31 bits
+    //Any large values (ex: 0x80000000 / 0x7FFFFFFF) work
+    //Will eventually lead to either (0 | 1) in the LSB position
+    //parity & 1 will set parity to either 0 or 1 after shifts have occurred.
+    
+    int parity;
+    parity = x ^ (x >> 16);                    
+    parity = parity ^ (parity >> 8);
+    parity = parity ^ (parity >> 4);
+    parity = parity ^ (parity >> 2);  //8 bit inputs ->parity is updated
+    parity = parity ^ (parity >> 1);  
+    parity = parity & 1;              //will set parity to (0 or 1)
+    
+    return parity;
 }
 /*
  * ilog2 - return floor(log base 2 of x), where x > 0
@@ -344,7 +373,7 @@ int bitParity(int x)
  *   Max ops: 90
  *   Rating: 4
  */
-int ilog2(int x) 
+int ilog2(int x) //RAN OUT OF TIME...
 {
   return 2;
 }
@@ -374,8 +403,11 @@ int trueThreeFourths(int x) //DONE!!!
     int d = c + (c << 1);          //generates largest(+/-) val
     int e =  ( (a << 1) + a + b);  //accounts for bias, creates a large val
     e = e >> 2;                    //large val >> 2 = small val (bias)
+    
     return (d + e);                //returns largest (+/-)val + bias
 }
+//----------------------------------------------------------------------------
+//RAN OUT OF TIME...
 /*
  * Extra credit
  */

@@ -304,12 +304,12 @@ int ezThreeFourths(int x) //DONE!!!
     int c;
     int d;
     int m;
-    
-    m = ( (x << 1) + x);  //same as adding (x + x + x) = num to divide
-    a = (1 << 2) + ~0;    //0x4 + -0x1 = 0x3 -> mask
-    b = (m >> 31);        //0x0 or -0x1 (ex: -9, output = -6)-> gen. sign
-    c = (a & b);            //0x3 & 0x0 = 0x0   --> handles bias 
-    d = ( (m + c) >> 2);  //(num + bias) >> 2 = output 
+   
+    a = ( (x << 1) + x);  //same as adding (x + x + x) = num to divide
+    m = (1 << 2) + ~0;    //0x4 + -0x1 = 0x3 -> mask
+    b = (a >> 31);        //0x0 or -0x1 (ex: -9, output = -6)-> gen. sign
+    c = (m & b);            //0x3 & 0x0 = 0x0   --> handles bias 
+    d = ( (a + c) >> 2);  //(num + bias) >> 2 = output
     
     return d;
 }
@@ -387,24 +387,9 @@ int ilog2(int x) //RAN OUT OF TIME...
  *   Max ops: 20
  *   Rating: 4
  */
-int trueThreeFourths(int x) //DONE!!!
+int trueThreeFourths(int x) //RAN OUT OF TIME
 {
-    //ex x = (-9) -> -0x9
-    //a = 0x3
-    //b = 0x3
-    //c = -0x3
-    //d = -0x9
-    //e = 0x3
-    //returns -0x9 + 0x3 = -0x6 
-    
-    int a = x & 0x3;               //remainder of x div by 4
-    int b = (x >> 31) & 0x3;       //generates small num (0x0/0x3) 
-    int c = (x >> 2);              //accounts for sign
-    int d = c + (c << 1);          //generates largest(+/-) val
-    int e =  ( (a << 1) + a + b);  //accounts for bias, creates a large val
-    e = e >> 2;                    //large val >> 2 = small val (bias)
-    
-    return (d + e);                //returns largest (+/-)val + bias
+    return 2;
 }
 //----------------------------------------------------------------------------
 //RAN OUT OF TIME...
